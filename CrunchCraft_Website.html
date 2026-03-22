@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CrunchCraft Foods | SpiceFit Protein Crisps</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,900;1,9..40,400&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #D4AC0D;
+    --red: #C0392B;
+    --orange: #E67E22;
+    --green: #27AE60;
+    --bg: #0a0a0a;
+    --card: #111111;
+    --border: #222222;
+    --text: #ffffff;
+    --muted: #999999;
+    --dim: #666666;
+  }
+
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  a { text-decoration: none; color: inherit; }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,10,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .logo-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 18px; color: #000;
+    background: linear-gradient(135deg, var(--gold), var(--red));
+  }
+  .logo span { font-weight: 700; font-size: 18px; letter-spacing: -0.5px; }
+  .nav-links { display: flex; align-items: center; gap: 4px; }
+  .nav-link {
+    padding: 8px 16px; font-size: 14px; font-weight: 500;
+    cursor: pointer; border-radius: 6px; transition: all 0.3s;
+    color: #aaa; border-bottom: 2px solid transparent;
+  }
+  .nav-link:hover { color: #fff; background: rgba(255,255,255,0.05); }
+  .nav-link.active { color: #fff; border-bottom-color: var(--gold); }
+  .cart-badge {
+    background: var(--red); padding: 1px 7px; border-radius: 20px;
+    font-size: 11px; font-weight: 700; margin-left: 4px;
+  }
+
+  /* PAGES */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* HERO */
+  .hero {
+    min-height: 88vh; display: flex; align-items: center;
+    background: radial-gradient(ellipse at 30% 50%, #1a0a00 0%, var(--bg) 70%);
+    position: relative; overflow: hidden;
+  }
+  .hero-pattern {
+    position: absolute; inset: 0; opacity: 0.08;
+    background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(212,172,13,0.15) 35px, rgba(212,172,13,0.15) 36px);
+  }
+  .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; position: relative; z-index: 2; }
+  .hero-tag {
+    display: inline-block; padding: 6px 14px; border-radius: 20px;
+    font-size: 11px; font-weight: 600; letter-spacing: 1.5px; margin-bottom: 24px;
+    background: rgba(212,172,13,0.12); color: var(--gold);
+    border: 1px solid rgba(212,172,13,0.25);
+  }
+  .hero h1 { font-size: 60px; font-weight: 900; line-height: 1.05; margin-bottom: 24px; letter-spacing: -1px; }
+  .hero h1 .gold { color: var(--gold); }
+  .hero h1 .red { color: var(--red); }
+  .hero p { font-size: 18px; color: #888; margin-bottom: 32px; max-width: 480px; }
+  .hero-buttons { display: flex; gap: 16px; }
+  .btn-primary {
+    padding: 14px 32px; border-radius: 10px; font-weight: 700; font-size: 15px;
+    color: #000; border: none; cursor: pointer; transition: transform 0.2s;
+    background: linear-gradient(135deg, var(--gold), var(--orange));
+  }
+  .btn-primary:hover { transform: scale(1.05); }
+  .btn-secondary {
+    padding: 14px 32px; border-radius: 10px; font-weight: 500; font-size: 15px;
+    color: #ccc; background: transparent; border: 1px solid #333; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,0.05); }
+  .hero-visual { display: flex; justify-content: center; position: relative; }
+  .hero-emoji {
+    width: 300px; height: 300px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 100px;
+    background: radial-gradient(circle, rgba(192,57,43,0.2) 0%, transparent 70%);
+    animation: pulse 3s ease-in-out infinite;
+  }
+  .hero-badge {
+    position: absolute; padding: 6px 14px; border-radius: 8px;
+    font-size: 13px; font-weight: 700; color: #fff;
+  }
+  .badge-protein { top: 20px; right: 30px; background: var(--red); }
+  .badge-plant { bottom: 30px; left: 20px; background: var(--green); }
+
+  @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+
+  /* STATS */
+  .stats {
+    padding: 64px 0;
+    border-top: 1px solid #1a1a1a; border-bottom: 1px solid #1a1a1a;
+  }
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; text-align: center; }
+  .stat-num { font-size: 40px; font-weight: 900; color: var(--gold); }
+  .stat-label { font-size: 13px; color: #666; margin-top: 4px; }
+
+  /* FLAVOR PREVIEW */
+  .flavors-section { padding: 80px 0; }
+  .section-title { font-size: 32px; font-weight: 700; text-align: center; margin-bottom: 8px; }
+  .section-sub { color: #666; text-align: center; margin-bottom: 48px; font-size: 15px; }
+  .flavors-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+  .flavor-card-mini {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 24px; text-align: center; cursor: pointer; transition: transform 0.3s;
+  }
+  .flavor-card-mini:hover { transform: scale(1.05); }
+  .flavor-card-mini .emoji { font-size: 40px; margin-bottom: 12px; }
+  .flavor-bar { width: 100%; height: 4px; border-radius: 4px; margin-bottom: 12px; }
+  .flavor-card-mini .name { font-weight: 700; font-size: 13px; }
+  .flavor-card-mini .meta { font-size: 11px; color: #666; margin-top: 4px; }
+
+  /* TESTIMONIALS */
+  .testimonials { padding: 80px 0; background: #080808; }
+  .test-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .test-card {
+    background: var(--card); border: 1px solid #1a1a1a; border-radius: 16px; padding: 28px;
+  }
+  .test-stars { color: #D4AC0D; margin-bottom: 12px; font-size: 14px; }
+  .test-text { color: #bbb; font-size: 14px; margin-bottom: 16px; line-height: 1.7; }
+  .test-name { font-weight: 700; font-size: 14px; }
+  .test-role { font-size: 12px; color: #666; }
+
+  /* PRODUCTS PAGE */
+  .products-page { padding: 64px 0; }
+  .products-page h1 { font-size: 36px; font-weight: 700; margin-bottom: 8px; }
+  .products-page > .container > p { color: #666; margin-bottom: 48px; }
+  .products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .product-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; overflow: hidden; transition: transform 0.3s;
+  }
+  .product-card:hover { transform: translateY(-4px); }
+  .product-img {
+    height: 200px; display: flex; align-items: center; justify-content: center; font-size: 80px;
+  }
+  .product-body { padding: 24px; }
+  .product-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .product-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .product-name { font-weight: 700; font-size: 18px; }
+  .product-desc { font-size: 14px; color: #888; margin-bottom: 16px; }
+  .product-tags { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .product-tag {
+    padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 500;
+    background: #1a1a1a;
+  }
+  .product-footer { display: flex; align-items: center; justify-content: space-between; }
+  .product-price { font-size: 22px; font-weight: 700; }
+  .product-price small { font-size: 12px; color: #666; font-weight: 400; }
+  .btn-add {
+    padding: 10px 22px; border-radius: 10px; font-weight: 700; font-size: 13px;
+    color: #000; background: var(--gold); border: none; cursor: pointer; transition: transform 0.2s;
+  }
+  .btn-add:hover { transform: scale(1.05); }
+
+  /* NUTRITION */
+  .nutrition-box {
+    margin-top: 64px; background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 40px;
+  }
+  .nutrition-box h2 { font-size: 24px; margin-bottom: 24px; }
+  .nutrition-box h2 span { font-size: 13px; color: #666; font-weight: 400; }
+  .nutri-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
+  .nutri-item {
+    text-align: center; padding: 20px; border-radius: 12px; background: #1a1a1a;
+  }
+  .nutri-val { font-size: 22px; font-weight: 700; color: var(--gold); }
+  .nutri-label { font-size: 12px; color: #666; margin-top: 4px; }
+  .nutri-note { font-size: 11px; color: #444; margin-top: 16px; }
+
+  /* ABOUT PAGE */
+  .about-page { padding: 64px 0; }
+  .about-page h1 { font-size: 36px; font-weight: 700; margin-bottom: 32px; }
+  .about-text { max-width: 800px; }
+  .about-text p { color: #bbb; margin-bottom: 20px; font-size: 16px; }
+  .about-text p:first-child { font-size: 20px; color: #ddd; }
+  .about-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 48px 0; }
+  .about-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px;
+  }
+  .about-card .icon { font-size: 32px; margin-bottom: 12px; }
+  .about-card h3 { font-weight: 700; margin-bottom: 8px; }
+  .about-card p { font-size: 14px; color: #888; }
+  .ai-box {
+    border-radius: 16px; padding: 36px; margin-top: 16px;
+    background: linear-gradient(135deg, #1a0a00, var(--bg));
+    border: 1px solid var(--border);
+  }
+  .ai-box h2 { font-size: 24px; margin-bottom: 16px; }
+  .ai-box p { color: #888; font-size: 15px; }
+
+  /* CHECKOUT PAGE */
+  .checkout-page { padding: 64px 0; }
+  .checkout-page h1 { font-size: 36px; font-weight: 700; margin-bottom: 32px; }
+  .empty-cart { text-align: center; padding: 80px 0; }
+  .empty-cart .icon { font-size: 64px; margin-bottom: 16px; }
+  .empty-cart p { color: #666; margin-bottom: 24px; }
+  .checkout-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 32px; }
+  .cart-items { display: flex; flex-direction: column; gap: 16px; }
+  .cart-item {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px 20px;
+  }
+  .cart-item-left { display: flex; align-items: center; gap: 16px; }
+  .cart-item-emoji { font-size: 32px; }
+  .cart-item-name { font-weight: 700; }
+  .cart-item-meta { font-size: 13px; color: #666; }
+  .cart-item-right { display: flex; align-items: center; gap: 12px; }
+  .qty-btn {
+    width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px; background: #222; color: #fff; border: none; cursor: pointer;
+  }
+  .qty-num { font-weight: 700; width: 24px; text-align: center; }
+  .cart-item-total { font-weight: 700; width: 64px; text-align: right; }
+  .order-summary {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 28px; height: fit-content; position: sticky; top: 80px;
+  }
+  .order-summary h3 { font-weight: 700; font-size: 18px; margin-bottom: 20px; }
+  .summary-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 10px; }
+  .summary-row .label { color: #888; }
+  .summary-row.total {
+    font-size: 18px; font-weight: 700; padding-top: 16px; margin-top: 8px;
+    border-top: 1px solid var(--border);
+  }
+  .btn-order {
+    width: 100%; padding: 14px; border-radius: 10px; font-weight: 700; font-size: 15px;
+    color: #000; border: none; cursor: pointer; margin-top: 20px; transition: transform 0.2s;
+    background: linear-gradient(135deg, var(--gold), var(--orange));
+  }
+  .btn-order:hover { transform: scale(1.03); }
+  .order-note { font-size: 11px; color: #555; text-align: center; margin-top: 12px; }
+
+  /* FOOTER */
+  footer {
+    margin-top: 64px; padding: 48px 0; border-top: 1px solid #1a1a1a; background: #050505;
+  }
+  .footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+  .footer-brand { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .footer-brand .icon {
+    width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 13px; color: #000;
+    background: linear-gradient(135deg, var(--gold), var(--red));
+  }
+  .footer-brand span { font-weight: 700; font-size: 15px; }
+  .footer-tagline { font-size: 12px; color: #444; }
+  .footer-col h4 { font-weight: 700; font-size: 13px; margin-bottom: 12px; }
+  .footer-col div { font-size: 12px; color: #555; margin-bottom: 6px; cursor: pointer; }
+  .footer-col div:hover { color: #999; }
+  .footer-bottom {
+    max-width: 1200px; margin: 32px auto 0; padding-top: 24px;
+    border-top: 1px solid #111; font-size: 12px; color: #333; text-align: center;
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed; top: 70px; right: 24px; z-index: 200;
+    padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 600;
+    background: var(--green); color: #fff; opacity: 0; transform: translateY(-10px);
+    transition: all 0.3s; pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .hero-grid { grid-template-columns: 1fr; text-align: center; }
+    .hero h1 { font-size: 40px; }
+    .hero p { margin: 0 auto 32px; }
+    .hero-buttons { justify-content: center; }
+    .hero-visual { margin-top: 40px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .flavors-grid { grid-template-columns: repeat(2, 1fr); }
+    .test-grid { grid-template-columns: 1fr; }
+    .products-grid { grid-template-columns: 1fr; }
+    .nutri-grid { grid-template-columns: repeat(3, 1fr); }
+    .about-cards { grid-template-columns: 1fr; }
+    .checkout-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo" onclick="showPage('home')">
+    <div class="logo-icon">C</div>
+    <span>CrunchCraft</span>
+  </div>
+  <div class="nav-links">
+    <div class="nav-link active" data-page="home" onclick="showPage('home')">Home</div>
+    <div class="nav-link" data-page="products" onclick="showPage('products')">Products</div>
+    <div class="nav-link" data-page="about" onclick="showPage('about')">About</div>
+    <div class="nav-link" data-page="checkout" onclick="showPage('checkout')">Cart <span id="cart-badge" class="cart-badge" style="display:none;">0</span></div>
+  </div>
+</nav>
+
+<!-- TOAST -->
+<div class="toast" id="toast">Added to cart!</div>
+
+<!-- HOME PAGE -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-pattern"></div>
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-tag">PLANT-BASED &bull; HIGH-PROTEIN &bull; INDIAN FLAVORS</div>
+          <h1>Crunch <span class="gold">Smarter</span>.<br>Spice <span class="red">Bolder</span>.</h1>
+          <p>SpiceFit Protein Crisps — air-puffed lentil crisps with 15g plant-based protein per serving. Five bold Indian-inspired flavors. Zero compromises.</p>
+          <div class="hero-buttons">
+            <button class="btn-primary" onclick="showPage('products')">Shop Now →</button>
+            <button class="btn-secondary" onclick="showPage('about')">Our Story</button>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-emoji">🌶️</div>
+          <div class="hero-badge badge-protein">15g Protein</div>
+          <div class="hero-badge badge-plant">100% Plant-Based</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div><div class="stat-num">15g</div><div class="stat-label">Protein / Serving</div></div>
+        <div><div class="stat-num">5</div><div class="stat-label">Bold Flavors</div></div>
+        <div><div class="stat-num">0</div><div class="stat-label">Artificial Additives</div></div>
+        <div><div class="stat-num">100%</div><div class="stat-label">Plant-Based</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="flavors-section">
+    <div class="container">
+      <div class="section-title">Five Flavors. Five Obsessions.</div>
+      <div class="section-sub">Each inspired by the bold, unapologetic flavors of India.</div>
+      <div class="flavors-grid">
+        <div class="flavor-card-mini" onclick="showPage('products')">
+          <div class="emoji">🔥</div>
+          <div class="flavor-bar" style="background:#C0392B"></div>
+          <div class="name">Smoky Tandoori</div>
+          <div class="meta">15g protein</div>
+        </div>
+        <div class="flavor-card-mini" onclick="showPage('products')">
+          <div class="emoji">🌶️</div>
+          <div class="flavor-bar" style="background:#E67E22"></div>
+          <div class="name">Street Chaat Masala</div>
+          <div class="meta">15g protein</div>
+        </div>
+        <div class="flavor-card-mini" onclick="showPage('products')">
+          <div class="emoji">✨</div>
+          <div class="flavor-bar" style="background:#D4AC0D"></div>
+          <div class="name">Turmeric Crunch</div>
+          <div class="meta">15g protein</div>
+        </div>
+        <div class="flavor-card-mini" onclick="showPage('products')">
+          <div class="emoji">🥭</div>
+          <div class="flavor-bar" style="background:#27AE60"></div>
+          <div class="name">Mango Habanero</div>
+          <div class="meta">15g protein</div>
+        </div>
+        <div class="flavor-card-mini" onclick="showPage('products')">
+          <div class="emoji">🧂</div>
+          <div class="flavor-bar" style="background:#7F8C8D"></div>
+          <div class="name">Sea Salt & Pepper</div>
+          <div class="meta">15g protein</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="testimonials">
+    <div class="container">
+      <div class="section-title" style="margin-bottom:48px;">What People Are Saying</div>
+      <div class="test-grid">
+        <div class="test-card">
+          <div class="test-stars">★★★★★</div>
+          <div class="test-text">"Finally a protein snack that actually tastes like real Indian flavors! The Chaat Masala is insanely good."</div>
+          <div class="test-name">Priya S.</div>
+          <div class="test-role">Software Engineer, Bangalore</div>
+        </div>
+        <div class="test-card">
+          <div class="test-stars">★★★★★</div>
+          <div class="test-text">"I recommend SpiceFit to all my clients. 15g protein in a crisp? Game changer for guilt-free snacking."</div>
+          <div class="test-name">Arjun M.</div>
+          <div class="test-role">Fitness Coach, Mumbai</div>
+        </div>
+        <div class="test-card">
+          <div class="test-stars">★★★★★</div>
+          <div class="test-text">"The Smoky Tandoori flavor is addictive. Love that it's plant-based and actually filling."</div>
+          <div class="test-name">Sneha R.</div>
+          <div class="test-role">Product Manager, Hyderabad</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- PRODUCTS PAGE -->
+<div class="page" id="page-products">
+  <div class="products-page">
+    <div class="container">
+      <h1>SpiceFit Protein Crisps</h1>
+      <p>Air-puffed. Plant-based. Protein-packed. Pick your flavor.</p>
+      <div class="products-grid" id="products-grid"></div>
+
+      <div class="nutrition-box">
+        <h2>Nutritional Information <span>(per 50g serving)</span></h2>
+        <div class="nutri-grid">
+          <div class="nutri-item"><div class="nutri-val">15g</div><div class="nutri-label">Protein</div></div>
+          <div class="nutri-item"><div class="nutri-val">125</div><div class="nutri-label">Calories (kcal)</div></div>
+          <div class="nutri-item"><div class="nutri-val">4g</div><div class="nutri-label">Fat</div></div>
+          <div class="nutri-item"><div class="nutri-val">12g</div><div class="nutri-label">Carbs</div></div>
+          <div class="nutri-item"><div class="nutri-val">5g</div><div class="nutri-label">Fiber</div></div>
+          <div class="nutri-item"><div class="nutri-val">1g</div><div class="nutri-label">Sugar</div></div>
+        </div>
+        <div class="nutri-note">Ingredients: Red lentil flour, pea protein isolate, rice flour, sunflower oil, spice blend (varies by flavor), sea salt. Allergens: May contain traces of nuts.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT PAGE -->
+<div class="page" id="page-about">
+  <div class="about-page">
+    <div class="container">
+      <h1>Our Story</h1>
+      <div class="about-text">
+        <p>CrunchCraft Foods was born from a simple frustration: why does healthy snacking have to taste boring?</p>
+        <p>As a team of food-loving, fitness-conscious professionals in India, we were tired of choosing between tasteless protein bars and flavor-loaded but nutritionally empty chips. We wanted the bold, unapologetic flavors of Indian street food — the smoky tandoori, the tangy chaat, the golden turmeric — in a snack that actually fueled our bodies.</p>
+        <p>So we built CrunchCraft Foods as an AI-first company. We used Generative AI to analyze market trends, develop recipes, design packaging, and build our brand. But the soul of SpiceFit — the flavors, the crunch, the feeling of eating something that's both delicious and nutritious — that comes from our deep love for Indian food culture.</p>
+
+        <div class="about-cards">
+          <div class="about-card">
+            <div class="icon">🎯</div>
+            <h3>Our Mission</h3>
+            <p>To make protein-rich, plant-based snacking irresistibly delicious through bold Indian flavors.</p>
+          </div>
+          <div class="about-card">
+            <div class="icon">🚀</div>
+            <h3>Our Vision</h3>
+            <p>To become India's most-loved health snack brand, proving that nutrition and taste are not trade-offs.</p>
+          </div>
+          <div class="about-card">
+            <div class="icon">💚</div>
+            <h3>Our Values</h3>
+            <p>Transparency in ingredients, sustainability in sourcing, and innovation in every bite.</p>
+          </div>
+        </div>
+
+        <div class="ai-box">
+          <h2>Why AI-First?</h2>
+          <p>We leveraged Generative AI at every step — from analyzing 10,000+ snack data points to identify market opportunities, to generating product names, recipes, marketing copy, and even this website. AI didn't replace our creativity; it amplified it. It let a small founding team move with the speed and scale of a much larger organization, getting SpiceFit from idea to market in record time.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT PAGE -->
+<div class="page" id="page-checkout">
+  <div class="checkout-page">
+    <div class="container">
+      <h1>Your Cart</h1>
+      <div id="cart-content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <div class="icon">C</div>
+          <span>CrunchCraft Foods</span>
+        </div>
+        <div class="footer-tagline">Crunch Smarter. Spice Bolder.</div>
+      </div>
+      <div class="footer-col">
+        <h4>Products</h4>
+        <div>Smoky Tandoori</div>
+        <div>Street Chaat Masala</div>
+        <div>Turmeric Crunch</div>
+        <div>Mango Habanero</div>
+        <div>Sea Salt & Pepper</div>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <div>About Us</div>
+        <div>Careers</div>
+        <div>Press</div>
+        <div>Contact</div>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <div>Instagram</div>
+        <div>YouTube</div>
+        <div>LinkedIn</div>
+        <div>Twitter</div>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 CrunchCraft Foods Pvt. Ltd. All rights reserved. | Built with AI.</div>
+  </div>
+</footer>
+
+<script>
+const flavors = [
+  { name: "Smoky Tandoori", color: "#C0392B", emoji: "🔥", desc: "Bold smoked paprika, cumin & ginger", protein: "15g", cal: "130", price: 89 },
+  { name: "Street Chaat Masala", color: "#E67E22", emoji: "🌶️", desc: "Tangy amchur, black salt & cumin", protein: "15g", cal: "125", price: 89 },
+  { name: "Turmeric Crunch", color: "#D4AC0D", emoji: "✨", desc: "Golden turmeric, black pepper & lemon", protein: "15g", cal: "120", price: 89 },
+  { name: "Mango Habanero", color: "#27AE60", emoji: "🥭", desc: "Sweet mango with fiery habanero kick", protein: "15g", cal: "128", price: 89 },
+  { name: "Sea Salt & Pepper", color: "#7F8C8D", emoji: "🧂", desc: "Himalayan pink salt & cracked pepper", protein: "15g", cal: "118", price: 89 },
+];
+
+let cart = [];
+
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.querySelector(`.nav-link[data-page="${page}"]`).classList.add('active');
+  window.scrollTo(0, 0);
+  if (page === 'checkout') renderCart();
+}
+
+function renderProducts() {
+  const grid = document.getElementById('products-grid');
+  grid.innerHTML = flavors.map((f, i) => `
+    <div class="product-card">
+      <div class="product-img" style="background:linear-gradient(135deg, ${f.color}22, ${f.color}08)">${f.emoji}</div>
+      <div class="product-body">
+        <div class="product-header">
+          <div class="product-dot" style="background:${f.color}"></div>
+          <div class="product-name">${f.name}</div>
+        </div>
+        <div class="product-desc">${f.desc}</div>
+        <div class="product-tags">
+          <span class="product-tag">🏋️ ${f.protein} Protein</span>
+          <span class="product-tag">🔥 ${f.cal} kcal</span>
+          <span class="product-tag">🌱 Vegan</span>
+        </div>
+        <div class="product-footer">
+          <div class="product-price">₹${f.price} <small>/ 50g</small></div>
+          <button class="btn-add" onclick="addToCart(${i})">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addToCart(index) {
+  const f = flavors[index];
+  const existing = cart.find(i => i.name === f.name);
+  if (existing) { existing.qty++; }
+  else { cart.push({ ...f, qty: 1 }); }
+  updateBadge();
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 1500);
+}
+
+function updateQty(name, delta) {
+  const item = cart.find(i => i.name === name);
+  if (item) {
+    item.qty += delta;
+    if (item.qty <= 0) cart = cart.filter(i => i.name !== name);
+  }
+  updateBadge();
+  renderCart();
+}
+
+function updateBadge() {
+  const total = cart.reduce((s, i) => s + i.qty, 0);
+  const badge = document.getElementById('cart-badge');
+  if (total > 0) { badge.style.display = 'inline'; badge.textContent = total; }
+  else { badge.style.display = 'none'; }
+}
+
+function renderCart() {
+  const el = document.getElementById('cart-content');
+  if (cart.length === 0) {
+    el.innerHTML = `
+      <div class="empty-cart">
+        <div class="icon">🛒</div>
+        <p>Your cart is empty</p>
+        <button class="btn-primary" onclick="showPage('products')">Browse Products</button>
+      </div>`;
+    return;
+  }
+  const totalPrice = cart.reduce((s, i) => s + i.qty * i.price, 0);
+  el.innerHTML = `
+    <div class="checkout-grid">
+      <div class="cart-items">
+        ${cart.map(item => `
+          <div class="cart-item">
+            <div class="cart-item-left">
+              <div class="cart-item-emoji">${item.emoji}</div>
+              <div>
+                <div class="cart-item-name">${item.name}</div>
+                <div class="cart-item-meta">50g pack · ₹${item.price}</div>
+              </div>
+            </div>
+            <div class="cart-item-right">
+              <button class="qty-btn" onclick="updateQty('${item.name}', -1)">−</button>
+              <span class="qty-num">${item.qty}</span>
+              <button class="qty-btn" onclick="updateQty('${item.name}', 1)">+</button>
+              <span class="cart-item-total">₹${item.qty * item.price}</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="order-summary">
+        <h3>Order Summary</h3>
+        <div class="summary-row"><span class="label">Subtotal</span><span>₹${totalPrice}</span></div>
+        <div class="summary-row"><span class="label">Shipping</span><span style="color:#27AE60">FREE</span></div>
+        <div class="summary-row total"><span>Total</span><span>₹${totalPrice}</span></div>
+        <button class="btn-order" onclick="alert('Order placed! Thank you for choosing SpiceFit!')">Place Order</button>
+        <div class="order-note">Free shipping on first 1000 orders!</div>
+      </div>
+    </div>`;
+}
+
+// Init
+renderProducts();
+</script>
+</body>
+</html>
